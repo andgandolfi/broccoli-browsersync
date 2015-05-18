@@ -1,43 +1,43 @@
 'use strict';
-var Filter = require('broccoli-filter');
+var Writer = require('broccoli-writer');
 var RSVP = require('rsvp');
 var bs = require('browser-sync');
 
 // TODO: add options for port and ms of delay
 
-function BrowserSyncFilter(inputTree, options) {
-    if (!(this instanceof BrowserSyncFilter)) {
-        return new BrowserSyncFilter(inputTree, options);
+function BrowserSyncWatcher(options) {
+    if (!(this instanceof BrowserSyncWatcher)) {
+        return new BrowserSyncWatcher(options);
     }
 
-    this.inputTree = inputTree;
+    options = options || {};
+    this.delay = (options.delay > 0 ? options.delay : 500 );
+    this.port = (options.port > 0 ? options.port : 4200 );
+
     if (!this.bsInstance){
         this.bsInstance = bs.create();
 
         this.bsInstance.init({
-            proxy: 'http://localhost:4200'
+            proxy: 'http://localhost:' + this.port
         });
 
         this.reload = function () {
-            console.log('##### RELOAD #####');
+            this.bsInstance.reload();
         }
     }
 }
 
-BrowserSyncFilter.prototype = Object.create(Filter.prototype);
-BrowserSyncFilter.prototype.constructor = BrowserSyncFilter;
+BrowserSyncWatcher.prototype = Object.create(Writer.prototype);
+BrowserSyncWatcher.prototype.constructor = BrowserSyncWatcher;
 
-//BrowserSyncFilter.prototype.extensions = [''];
-//BrowserSyncFilter.prototype.targetExtension = '';
-
-BrowserSyncFilter.prototype.processString = function (str) {
+BrowserSyncWatcher.prototype.write = function (readTree, destDir) {
     if (this.fireTimer)
         clearTimeout(this.fireTimer);
 
     this.fireTimer = setTimeout(function () {
         this.reload();
         this.fireTimer = null;
-    }.bind(this), 500);
+    }.bind(this), this.delay);
 };
 
-module.exports = BrowserSyncFilter;
+module.exports = BrowserSyncWatcher;

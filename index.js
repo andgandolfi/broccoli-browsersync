@@ -1,9 +1,6 @@
 'use strict';
 var Writer = require('broccoli-writer');
-var RSVP = require('rsvp');
 var bs = require('browser-sync');
-
-// TODO: add options for port and ms of delay
 
 function BrowserSyncWatcher(options) {
     if (!(this instanceof BrowserSyncWatcher)) {

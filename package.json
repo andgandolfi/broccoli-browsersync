@@ -25,8 +25,7 @@
   ],
   "dependencies": {
     "broccoli-writer": "^0.1.1",
-    "browser-sync": "^2.7.1",
-    "rsvp": "^3.0.18"
+    "browser-sync": "^2.7.1"
   },
   "devDependencies": {
     "broccoli": "^0.16.2",
